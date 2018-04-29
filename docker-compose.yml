@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+
+    app:
+        image: php:7.2.5-fpm
+        working_dir: /app
+        volumes:
+            - ./app:/app
+        ports:
+            - "9000:9000"
+            
+    composer:
+        image: composer:latest
+        restart: always
+        working_dir: /app
+        restart: 'no'
+        command: install
+        volumes:
+            - ./app:/app
+            
+
