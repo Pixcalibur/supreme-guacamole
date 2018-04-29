@@ -2,7 +2,7 @@
 
 namespace Hero\Action;
 
-use Hero\BattleLogger;
+use Hero\Service\BattleLogger;
 use Hero\DamageCalculator\DamageCalculator;
 use Hero\DamageCalculator\DamageCalculatorRule;
 use Hero\Entity\Entity;
@@ -21,12 +21,14 @@ class AttackAction implements ActionInterface
         );
         
         $damageCalculator = new DamageCalculator();
-        $damageCalculator->addRules([
-           new DamageCalculatorRule(DamageCalculatorRule::OPERAND_ADD, $origin->getStrenght()),
-           new DamageCalculatorRule(DamageCalculatorRule::OPERAND_SUB, $target->getDefence()),
-        ]);
+        $damageCalculator->addRules(
+            [
+            new DamageCalculatorRule(DamageCalculatorRule::OPERAND_ADD, $origin->getStrenght()),
+            new DamageCalculatorRule(DamageCalculatorRule::OPERAND_SUB, $target->getDefence()),
+            ]
+        );
         
-        if (mt_rand(0, 100) > $target->getLuck()) {
+        if (mt_rand(0, 100) >= $target->getLuck()) {
             $target->defend($damageCalculator);
         } else {
             BattleLogger::log(
@@ -36,5 +38,4 @@ class AttackAction implements ActionInterface
             );
         }
     }
-
 }

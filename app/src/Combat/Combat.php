@@ -4,37 +4,41 @@ namespace Hero\Combat;
 
 use Hero\Action\ActionQueue;
 use Hero\Action\AttackAction;
-use Hero\BattleLogger;
 use Hero\Entity\Entity;
 use Hero\Entity\EntitySkill\AddActionSkill;
+use Hero\Entity\EntitySkill\EntitySkillInterface;
+use Hero\Service\BattleLogger;
 use InvalidArgumentException;
 
-final class Combat 
+final class Combat
 {
-    const MAX_ENTITIES = 2;
+    const EXPECTED_ENTITIES_NUM = 2;
     const MAX_TURNS = 20;
     
     /**
-     * @var int 
+     * @var int
      */
     private $turnNumber = 0;
         
     /**
-     * @var Entity 
+     * @var Entity
      */
     private $attacker;
     
     /**
-     * @var Entity 
+     * @var Entity
      */
     private $defender;
     
     /**
      * @param Entity[] $entities
      */
-    public function __construct($entities) {
-        if (count($entities) > self::MAX_ENTITIES) {
-            throw new InvalidArgumentException('Too many entities');
+    public function __construct($entities)
+    {
+        if (count($entities) !== self::EXPECTED_ENTITIES_NUM) {
+            throw new InvalidArgumentException(
+                sprintf('Illegal number of entities passed: $d', count($entities))
+            );
         }
         
         $this->resolveStartingRoles(array_shift($entities), array_shift($entities));
@@ -59,7 +63,7 @@ final class Combat
     /**
      * @param Entity $first
      * @param Entity $second
-     * 
+     *
      * @return void
      */
     private function resolveStartingRoles($first, $second)
@@ -70,25 +74,25 @@ final class Combat
             $luckComparisonResult = $first->getLuck() <=> $second->getLuck();
             if (0 === $luckComparisonResult) {
                 $this->assignRoles($first, $second);
-            } else if (-1 === $luckComparisonResult) {
+            } elseif (-1 === $luckComparisonResult) {
                 $this->assignRoles($second, $first);
             } else {
                 $this->assignRoles($first, $second);
             }
-        } else if (-1 === $speedComparisonResult) {
+        } elseif (-1 === $speedComparisonResult) {
             $this->assignRoles($second, $first);
         } else {
             $this->assignRoles($first, $second);
         }
 
         BattleLogger::log(
-            "\n%s--VS--\n%s", 
-            $this->attacker,    
-            $this->defender     
+            "\n%s--VS--\n%s",
+            $this->attacker,
+            $this->defender
         );
         
         BattleLogger::log(
-            '%s is the first to act.', 
+            '%s is the first to act.',
             $this->attacker->getName()
         );
     }
@@ -118,7 +122,7 @@ final class Combat
      */
     public function resolveCombat()
     {
-        while(!$this->isGameOver()) {
+        while (!$this->isGameOver()) {
             $this->resolveTurn();
         }
     }
@@ -135,9 +139,10 @@ final class Combat
             new AttackAction()
         );
         
-        foreach($this->attacker->getSkills() as $skill) {
-            if ($skill instanceof AddActionSkill &&
-                $skill->canActivate()
+        foreach ($this->attacker->getSkills() as $skill) {
+            if (EntitySkillInterface::TRIGGER_ON_ATTACK === $skill->triggerOn()
+                && $skill instanceof AddActionSkill
+                && $skill->canActivate()
             ) {
                 BattleLogger::log(
                     '%s activates %s!',
@@ -166,7 +171,7 @@ final class Combat
      * @return boolean
      */
     private function isGameOver()
-    {     
+    {
         if (self::MAX_TURNS <= $this->turnNumber) {
             BattleLogger::log('The battle is over!');
             return true;
@@ -174,7 +179,7 @@ final class Combat
         
         if (!$this->attacker->isAlive()) {
             BattleLogger::log(
-                '%s won the battle!', 
+                '%s won the battle!',
                 $this->defender->getName()
             );
             return true;
@@ -182,7 +187,7 @@ final class Combat
         
         if (!$this->defender->isAlive()) {
             BattleLogger::log(
-                '%s won the battle!', 
+                '%s won the battle!',
                 $this->attacker->getName()
             );
             return true;
@@ -190,5 +195,4 @@ final class Combat
         
         return false;
     }
-    
 }

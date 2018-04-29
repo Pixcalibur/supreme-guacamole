@@ -9,5 +9,5 @@ abstract class AddActionSkill implements EntitySkillInterface
     /**
      * @return ActionInterface
      */
-    abstract function getAction();
+    abstract public function getAction();
 }

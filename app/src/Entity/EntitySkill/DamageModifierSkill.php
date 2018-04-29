@@ -9,5 +9,5 @@ abstract class DamageModifierSkill implements EntitySkillInterface
     /**
      * @return DamageCalculatorRule[]
      */
-    abstract function getDamageCalculatorRules();
+    abstract public function getDamageCalculatorRules();
 }

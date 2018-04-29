@@ -2,15 +2,15 @@
 
 namespace Hero\Entity;
 
-use Hero\BattleLogger;
 use Hero\DamageCalculator\DamageCalculator;
 use Hero\Entity\EntitySkill\DamageModifierSkill;
-use Hero\Entity\EntitySkillInterface;
+use Hero\Entity\EntitySkill\EntitySkillInterface;
+use Hero\Service\BattleLogger;
 
 class Entity
 {
     /**
-     * @var string 
+     * @var string
      */
     private $name;
 
@@ -30,7 +30,7 @@ class Entity
     private $defence;
     
     /**
-     * @var int 
+     * @var int
      */
     private $speed;
     
@@ -45,13 +45,13 @@ class Entity
     private $skills;
     
     /**
-     * @param string                        $name
-     * @param int                           $health
-     * @param int                           $strength
-     * @param int                           $defence
-     * @param int                           $speed
-     * @param int                           $luck
-     * @param EntitySkillInterface[]        $skills
+     * @param string                 $name
+     * @param int                    $health
+     * @param int                    $strength
+     * @param int                    $defence
+     * @param int                    $speed
+     * @param int                    $luck
+     * @param EntitySkillInterface[] $skills
      */
     public function __construct(
         $name,
@@ -99,7 +99,7 @@ class Entity
     /**
      * @return int
      */
-    public function getDefence(): int 
+    public function getDefence(): int
     {
         return $this->defence;
     }
@@ -107,7 +107,7 @@ class Entity
     /**
      * @return int
      */
-    public function getSpeed(): int 
+    public function getSpeed(): int
     {
         return $this->speed;
     }
@@ -115,7 +115,7 @@ class Entity
     /**
      * @return int
      */
-    public function getLuck(): int 
+    public function getLuck(): int
     {
         return $this->luck;
     }
@@ -123,7 +123,7 @@ class Entity
     /**
      * @param int $health
      */
-    public function setHealth($health) 
+    public function setHealth($health)
     {
         $this->health = $health;
     }
@@ -131,7 +131,7 @@ class Entity
     /**
      * @param int $strenght
      */
-    public function setStrenght($strenght) 
+    public function setStrenght($strenght)
     {
         $this->strenght = $strenght;
     }
@@ -139,7 +139,7 @@ class Entity
     /**
      * @param int $defence
      */
-    public function setDefence($defence) 
+    public function setDefence($defence)
     {
         $this->defence = $defence;
     }
@@ -147,7 +147,7 @@ class Entity
     /**
      * @param int $speed
      */
-    public function setSpeed($speed) 
+    public function setSpeed($speed)
     {
         $this->speed = $speed;
     }
@@ -182,8 +182,9 @@ class Entity
     public function defend(DamageCalculator $damageCalculator)
     {
         foreach ($this->getSkills() as $skill) {
-            if ($skill instanceof DamageModifierSkill &&
-                $skill->canActivate()
+            if (EntitySkillInterface::TRIGGER_ON_DEFEND === $skill->triggerOn()
+                && $skill instanceof DamageModifierSkill
+                && $skill->canActivate()
             ) {
                 BattleLogger::log(
                     '%s activates %s!',
@@ -208,7 +209,7 @@ class Entity
     /**
      * @return string
      */
-    public function __toString() 
+    public function __toString()
     {
         return sprintf(
             "%s\nHP: %d\nSTR: %d\nDEF: %d\nSPD: %d\nLCK: %d%%\n",
@@ -220,6 +221,4 @@ class Entity
             $this->getLuck()
         );
     }
-    
 }
-

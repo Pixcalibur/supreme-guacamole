@@ -10,9 +10,17 @@ class RapidStrikeSkill extends AddActionSkill
     const NAME = 'Rapid Strike';
         
     /**
-     * @var int 
+     * @var int
      */
     private $activationChance = 10;
+    
+    /**
+     * @inheritdoc
+     */
+    public function triggerOn(): string
+    {
+        return EntitySkillInterface::TRIGGER_ON_ATTACK;
+    }
     
     /**
      * @inheritdoc
@@ -26,7 +34,7 @@ class RapidStrikeSkill extends AddActionSkill
      * @inheritdoc
      */
     public function getAction(): ActionInterface
-    {        
+    {
         return new AttackAction();
     }
 
@@ -37,5 +45,4 @@ class RapidStrikeSkill extends AddActionSkill
     {
         return self::NAME;
     }
-
 }

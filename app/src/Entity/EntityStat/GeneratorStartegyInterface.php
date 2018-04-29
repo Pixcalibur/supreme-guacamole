@@ -2,7 +2,7 @@
 
 namespace Hero\Entity\EntityStat;
 
-interface GeneratorStartegyInterface 
+interface GeneratorStartegyInterface
 {
     /**
      * @return int

@@ -1,10 +1,10 @@
 <?php
 
-namespace Hero;
+namespace Hero\Service;
 
 class BattleLogger
 {
-    public static function log() 
+    public static function log()
     {
         if (!LOG) {
             return;

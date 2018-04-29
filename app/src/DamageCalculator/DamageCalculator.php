@@ -5,14 +5,15 @@ namespace Hero\DamageCalculator;
 use \Hero\DamageCalculator\DamageCalculatorRule;
 
 class DamageCalculator
-{        
+{
+        
     /**
      * @var DamageCalculatorRule[]
      */
     private $rules = [];
         
     /**
-     * 
+     *
      * @param DamageCalculatorRule $rule
      */
     public function addRule(DamageCalculatorRule $rule)
@@ -25,7 +26,7 @@ class DamageCalculator
      */
     public function addRules($rules)
     {
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             $this->addRule($rule);
         }
     }
@@ -50,5 +51,4 @@ class DamageCalculator
     {
         $this->rules = [];
     }
-    
 }

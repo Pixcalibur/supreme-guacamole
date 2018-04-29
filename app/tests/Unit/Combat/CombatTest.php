@@ -5,6 +5,31 @@ use PHPUnit\Framework\TestCase;
 
 final class CombatTest extends TestCase 
 {
+    
+    public function testNoEntities()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Hero\Combat\Combat([]);
+    }
+    
+    public function testInvalidNumberOfEntities()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Hero\Combat\Combat([1, 2, 3]);
+    }
+    
+    /**
+     * @dataProvider resolveStartingRolesProvider
+     */
+    public function testResolveStartingRoles(
+        Entity $first, 
+        Entity $second,
+        string $startingEntityName
+    ) {
+        $combat = new Hero\Combat\Combat([$first, $second]);
+        $this->assertEquals($startingEntityName, $combat->getAttacker()->getName());
+    }
+    
     public function resolveStartingRolesProvider()
     {
         return [
@@ -34,18 +59,6 @@ final class CombatTest extends TestCase
                 '1'
             ],
         ];
-    }
-    
-    /**
-     * @dataProvider resolveStartingRolesProvider
-     */
-    public function testResolveStartingRoles(
-        Entity $first, 
-        Entity $second,
-        string $startingEntityName
-    ) {
-        $combat = new Hero\Combat\Combat([$first, $second]);
-        $this->assertEquals($startingEntityName, $combat->getAttacker()->getName());
     }
     
 }

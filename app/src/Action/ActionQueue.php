@@ -13,7 +13,7 @@ class ActionQueue
     private $actions;
     
     /**
-     * @var integer 
+     * @var integer
      */
     private $currentActionIndex = 0;
     
@@ -41,12 +41,12 @@ class ActionQueue
     /**
      * @param Entity $origin
      * @param Entity $target
-     * 
+     *
      * @return type
      */
     public function resolveQueue(Entity $origin, Entity $target)
     {
-        while(!$this->isQueueResolved()) {
+        while (!$this->isQueueResolved()) {
             $this->resolveQueueAction($origin, $target);
         }
     }
@@ -54,7 +54,7 @@ class ActionQueue
     /**
      * @param Entity $origin
      * @param Entity $target
-     * 
+     *
      * @return type
      */
     private function resolveQueueAction(Entity $origin, Entity $target)

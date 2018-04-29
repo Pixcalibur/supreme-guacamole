@@ -6,19 +6,21 @@ use Hero\DamageCalculator\DamageCalculatorRule;
 
 class MagicShieldSkill extends DamageModifierSkill
 {
-    
     const NAME = 'Magic Shield';
-    
+        
     /**
-     * @var bool 
-     */
-    private $active = false;
-    
-    /**
-     * @var int 
+     * @var int
      */
     private $activationChance = 20;
-        
+      
+    /**
+     * @inheritdoc
+     */
+    public function triggerOn(): string
+    {
+        return EntitySkillInterface::TRIGGER_ON_DEFEND;
+    }
+    
     /**
      * @return bool
      */
@@ -43,11 +45,10 @@ class MagicShieldSkill extends DamageModifierSkill
         return $this->activationChance >= mt_rand(0, 100);
     }
 
-    public function getDamageCalculatorRules() 
+    public function getDamageCalculatorRules()
     {
         return [
             new DamageCalculatorRule(DamageCalculatorRule::OPERAND_MUL, 0.5)
         ];
     }
-
 }
